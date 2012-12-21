@@ -1,0 +1,335 @@
+[
+    {
+        "pk":422,
+        "model":"eav.attribute",
+        "fields":{
+            "description":"number of nets sent",
+            "created":"2011-11-02 10:25:28",
+            "datatype":"int",
+            "enum_group":null,
+            "required":false,
+            "site":1,
+            "modified":"2011-11-02 10:25:28",
+            "type":null,
+            "slug":"nets-sent",
+            "name":"Number of nets sent"
+        }
+    },
+    {
+        "pk":73,
+        "model":"rapidsms_xforms.xform",
+        "fields":{
+            "name":"Bednets SENT Report",
+            "keyword":"send",
+            "created":"2012-12-18 16:16:16",
+            "restrict_message":"Only the BEDNETS group can report.",
+            "modified":"2012-12-18 16:16:16",
+            "site":1,
+            "owner":1,
+            "separator":",;:.*/",
+            "restrict_to":[],
+            "active":true,
+            "command_prefix":"+",
+            "response":"Thank you for your report!",
+            "keyword_prefix":null,
+            "description":"BedNets Sent for Distribution"
+        }
+
+    },
+    {
+        "pk":422,
+        "model":"rapidsms_xforms.xformfield",
+        "fields":{
+            "field_type":"int",
+            "question":null,
+            "command":"nets",
+            "order":0,
+            "xform":73
+        }
+    },
+
+
+    {
+        "pk":112,
+        "model":"rapidsms_xforms.xformfieldconstraint",
+        "fields":{
+            "test":null,
+            "field":422,
+            "message":"Number of bednets is required.",
+            "type":"req_val",
+            "order":1000
+        }
+    },
+    {
+        "pk":423,
+        "model":"eav.attribute",
+        "fields":{
+            "description":"Where nets are coming from",
+            "created":"2011-11-02 10:25:28",
+            "datatype":"text",
+            "enum_group":null,
+            "required":false,
+            "site":1,
+            "modified":"2011-11-02 10:25:28",
+            "type":null,
+            "slug":"nets-from",
+            "name":"Bednets from"
+        }
+    },
+    {
+        "pk":423,
+        "model":"rapidsms_xforms.xformfield",
+        "fields":{
+            "field_type":"text",
+            "question":null,
+            "command":"from",
+            "order":0,
+            "xform":73
+        }
+    },
+    {
+        "pk":113,
+        "model":"rapidsms_xforms.xformfieldconstraint",
+        "fields":{
+            "test":null,
+            "field":423,
+            "message":"Location from which you are sending the bednets is required.",
+            "type":"req_val",
+            "order":1000
+        }
+    },
+    {
+        "pk":424,
+        "model":"eav.attribute",
+        "fields":{
+            "description":"Where the bednets are going",
+            "created":"2011-11-02 10:25:28",
+            "datatype":"text",
+            "enum_group":null,
+            "required":false,
+            "site":1,
+            "modified":"2011-11-02 10:25:28",
+            "type":null,
+            "slug":"nets-to",
+            "name":"Bednets To"
+        }
+    },
+
+    {
+        "pk":424,
+        "model":"rapidsms_xforms.xformfield",
+        "fields":{
+            "field_type":"text",
+            "question":null,
+            "command":"to",
+            "order":0,
+            "xform":73
+        }
+    },
+    {
+        "pk":114,
+        "model":"rapidsms_xforms.xformfieldconstraint",
+        "fields":{
+            "test":null,
+            "field":424,
+            "message":"Location to which you are sending bednets is required.",
+            "type":"req_val",
+            "order":1000
+        }
+    },
+
+    {
+        "pk":74,
+        "model":"rapidsms_xforms.xform",
+        "fields":{
+            "name":"Bednets RECV Report",
+            "keyword":"recv",
+            "created":"2012-12-18 16:16:16",
+            "restrict_message":"Only the BEDNETS group can report.",
+            "modified":"2012-12-18 16:16:16",
+            "site":1,
+            "owner":1,
+            "separator":",;:.*/",
+            "restrict_to":[],
+            "active":true,
+            "command_prefix":"+",
+            "response":"Thank you for your report!",
+            "keyword_prefix":null,
+            "description":"Bednets Received at Distribution point"
+        }
+
+    },
+    {
+        "pk":425,
+        "model":"eav.attribute",
+        "fields":{
+            "description":"number of nets received",
+            "created":"2011-11-02 10:25:28",
+            "datatype":"int",
+            "enum_group":null,
+            "required":false,
+            "site":1,
+            "modified":"2011-11-02 10:25:28",
+            "type":null,
+            "slug":"nets-recv",
+            "name":"Number of bednets received"
+        }
+    },
+    {
+        "pk":425,
+        "model":"rapidsms_xforms.xformfield",
+        "fields":{
+            "field_type":"int",
+            "question":null,
+            "command":"nets",
+            "order":0,
+            "xform":74
+        }
+    },
+    {
+        "pk":115,
+        "model":"rapidsms_xforms.xformfieldconstraint",
+        "fields":{
+            "test":null,
+            "field":425,
+            "message":"Number of bednets received is required.",
+            "type":"req_val",
+            "order":1000
+        }
+    },
+    {
+        "pk":426,
+        "model":"eav.attribute",
+        "fields":{
+            "description":"Location where the nets were received",
+            "created":"2011-11-02 10:25:28",
+            "datatype":"text",
+            "enum_group":null,
+            "required":false,
+            "site":1,
+            "modified":"2011-11-02 10:25:28",
+            "type":null,
+            "slug":"nets-rcv-location",
+            "name":"Location where nets received"
+        }
+    },
+    {
+        "pk":426,
+        "model":"rapidsms_xforms.xformfield",
+        "fields":{
+            "field_type":"text",
+            "question":null,
+            "command":"at",
+            "order":0,
+            "xform":74
+        }
+    },
+    {
+        "pk":116,
+        "model":"rapidsms_xforms.xformfieldconstraint",
+        "fields":{
+            "test":null,
+            "field":426,
+            "message":"Location where bednets were received is  required.",
+            "type":"req_val",
+            "order":1000
+        }
+    },
+    {
+        "pk":75,
+        "model":"rapidsms_xforms.xform",
+        "fields":{
+            "name":"Bednets DIST Report",
+            "keyword":"dist",
+            "created":"2012-12-18 16:16:16",
+            "restrict_message":"Only the BEDNETS group can report.",
+            "modified":"2012-12-18 16:16:16",
+            "site":1,
+            "owner":1,
+            "separator":",;:.*/",
+            "restrict_to":[],
+            "active":true,
+            "command_prefix":"+",
+            "response":"Thank you for your report!",
+            "keyword_prefix":null,
+            "description":"Bednets Distributed from a distribution point"
+        }
+
+    },
+    {
+        "pk":427,
+        "model":"eav.attribute",
+        "fields":{
+            "description":"number of nets distributed",
+            "created":"2011-11-02 10:25:28",
+            "datatype":"int",
+            "enum_group":null,
+            "required":false,
+            "site":1,
+            "modified":"2011-11-02 10:25:28",
+            "type":null,
+            "slug":"nets-dist",
+            "name":"Number of bednets distributed"
+        }
+    },
+    {
+        "pk":427,
+        "model":"rapidsms_xforms.xformfield",
+        "fields":{
+            "field_type":"int",
+            "question":null,
+            "command":"nets",
+            "order":0,
+            "xform":75
+        }
+    },
+    {
+        "pk":117,
+        "model":"rapidsms_xforms.xformfieldconstraint",
+        "fields":{
+            "test":null,
+            "field":427,
+            "message":"Number of bednets distributed is required.",
+            "type":"req_val",
+            "order":1000
+        }
+    },
+    {
+        "pk":428,
+        "model":"eav.attribute",
+        "fields":{
+            "description":"Location where the nets from which distributed",
+            "created":"2011-11-02 10:25:28",
+            "datatype":"text",
+            "enum_group":null,
+            "required":false,
+            "site":1,
+            "modified":"2011-11-02 10:25:28",
+            "type":null,
+            "slug":"nets-to-dist",
+            "name":"Location where nets distributed"
+        }
+    },
+    {
+        "pk":428,
+        "model":"rapidsms_xforms.xformfield",
+        "fields":{
+            "field_type":"text",
+            "question":null,
+            "command":"at",
+            "order":0,
+            "xform":75
+        }
+    },
+    {
+        "pk":118,
+        "model":"rapidsms_xforms.xformfieldconstraint",
+        "fields":{
+            "test":null,
+            "field":428,
+            "message":"Location where bednets were distributed is required.",
+            "type":"req_val",
+            "order":1000
+        }
+    }
+]
