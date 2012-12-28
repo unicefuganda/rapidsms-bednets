@@ -1,6 +1,7 @@
 import unittest
 from mtrack_project.rapidsms_cvs.cvs.tests.util import fake_incoming
 from django.core.exceptions import ValidationError
+from mtrack_project.rapidsms_xforms_src.rapidsms_xforms.models import XFormSubmission
 
 class SendBednetsXformTest(unittest.TestCase):
     def test_should_invalidate_incomplete_message_without_number_of_bednets(self):
@@ -23,6 +24,13 @@ class SendBednetsXformTest(unittest.TestCase):
 
         self.assertTrue(message.response.__contains__("Thank you for your report!"))
 
+    def tearDown(self):
+        XFormSubmission.objects.all().delete()
+
+    @classmethod
+    def tearDownClass(cls):
+        XFormSubmission.objects.all().delete()
+
 
 class RecvBednetsXformTest(unittest.TestCase):
     def test_should_invalidate_incomplete_message_without_number_of_bednets(self):
@@ -41,6 +49,9 @@ class RecvBednetsXformTest(unittest.TestCase):
 
         self.assertTrue(message.response.__contains__("Thank you for your report!"))
 
+    @classmethod
+    def tearDownClass(cls):
+        XFormSubmission.objects.all().delete()
 
 class DistBednetsXformTest(unittest.TestCase):
     def test_should_invalidate_incomplete_message_without_number_of_bednets(self):
@@ -57,3 +68,7 @@ class DistBednetsXformTest(unittest.TestCase):
         message = fake_incoming('dist.11.from')
 
         self.assertTrue(message.response.__contains__("Thank you for your report!"))
+
+    @classmethod
+    def tearDownClass(cls):
+        XFormSubmission.objects.all().delete()

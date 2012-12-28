@@ -15,6 +15,11 @@ class SentBednetsXformTest(unittest.TestCase):
         self.assertEquals("to", values[2].value)
         self.assertEquals('send.112.from.to', submission.raw)
 
+    @classmethod
+    def tearDownClass(cls):
+        XFormSubmission.objects.all().delete()
+
+
 class ReceivedBednetsXformTest(unittest.TestCase):
 
     def test_should_map_valid_values_to_xform_fields(self):
@@ -28,6 +33,10 @@ class ReceivedBednetsXformTest(unittest.TestCase):
         self.assertEquals("at", values[1].value)
         self.assertEquals("recv.112.at",submission.raw)
 
+    @classmethod
+    def tearDownClass(cls):
+        XFormSubmission.objects.all().delete()
+
 class DistributedBednetsXformTest(unittest.TestCase):
 
     def test_should_map_valid_values_to_xform_fields(self):
@@ -40,3 +49,6 @@ class DistributedBednetsXformTest(unittest.TestCase):
         self.assertEquals("at", values[1].value)
         self.assertEquals('dist.100.at',submission.raw)
 
+    @classmethod
+    def tearDownClass(cls):
+        XFormSubmission.objects.all().delete()
