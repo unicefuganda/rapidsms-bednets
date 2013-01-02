@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, User
 from uganda_common.utils import parse_telephone, parse_header_row, parse_name, parse_district, parse_village,\
     parse_birthdate, parse_gender, assign_backend
 from xlrd import open_workbook
@@ -57,13 +57,47 @@ def _set_reporting_location(district, contact):
             Location.objects.filter(type__slug='district'))
 
 
+def _get_unique_username(clean_name, suffix):
+    name = clean_name + str(suffix) if suffix > 0 else clean_name
+    try:
+        User.objects.get(username=name)
+        return _get_unique_username(clean_name, suffix+1)
+    except User.DoesNotExist:
+        return name
+
+
+def _create_user_for_contact(values):
+    user = User()
+    name = values.get('name')
+    if is_empty(name):
+        user, created = User.objects.get_or_create(username='anonymous_user')
+    else:
+        name = name.strip()
+        clean_name = name.replace(" ", "_").lower()
+        unique_name = _get_unique_username(clean_name,0)
+        user.username = unique_name
+        user.first_name = name.title()
+        user.email = 'mtrac@gmail.com'
+        user.set_password('password')
+    return user
+
+
+def _assign_user_to_contact(contact, group, values):
+    user = _create_user_for_contact(values)
+    user.save()
+    user.groups.add(group)
+    user.save()
+    contact.user = user
+    contact.save()
+
+
 def handle_excel_file(file):
     contacts = []
     invalid = []
     duplicates = []
     info = ''
     try:
-        group, created = Group.objects.get_or_create(name="bednets")
+        group = Group.objects.get(name="bednets")
         parsed_values = XlsParser().parse(file.read())
         for values in parsed_values:
             raw_number = values.get('telephone number')
@@ -87,6 +121,7 @@ def handle_excel_file(file):
                 _set_reporting_location(values.get('district'), contact)
                 contact.save()
                 contact.groups.add(group)
+                _assign_user_to_contact(contact, group, values)
                 connection.contact = contact
                 connection.save()
                 contacts.append(phone_number)
