@@ -1,5 +1,13 @@
 [
     {
+        "pk":131,
+        "model":"auth.group",
+        "fields":{
+            "name":"bednets",
+            "permissions":[]
+        }
+    },
+    {
         "pk":422,
         "model":"eav.attribute",
         "fields":{
@@ -27,7 +35,7 @@
             "site":1,
             "owner":1,
             "separator":",;:.*/",
-            "restrict_to":[],
+            "restrict_to":[131],
             "active":true,
             "command_prefix":"+",
             "response":"Thank you for your report!",
@@ -150,7 +158,7 @@
             "site":1,
             "owner":1,
             "separator":",;:.*/",
-            "restrict_to":[],
+            "restrict_to":[131],
             "active":true,
             "command_prefix":"+",
             "response":"Thank you for your report!",
@@ -247,7 +255,7 @@
             "site":1,
             "owner":1,
             "separator":",;:.*/",
-            "restrict_to":[],
+            "restrict_to":[131],
             "active":true,
             "command_prefix":"+",
             "response":"Thank you for your report!",
