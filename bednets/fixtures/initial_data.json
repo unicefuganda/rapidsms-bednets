@@ -3,7 +3,7 @@
         "pk":131,
         "model":"auth.group",
         "fields":{
-            "name":"bednets",
+            "name":"LLIN",
             "permissions":[]
         }
     },

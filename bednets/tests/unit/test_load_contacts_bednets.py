@@ -1,7 +1,7 @@
 import unittest
-from django.contrib.auth.models import Group, User
+from django.contrib.auth.models import User
 from bednets.management.commands.load_contacts_bednets import _clean_telephone_number, \
-    _parse_name, _parse_gender, _set_village, _create_user_for_contact
+    _parse_name, _create_user_for_contact
 from mock import Mock, patch
 
 class LoadContactsBednetsTests(unittest.TestCase):
@@ -39,18 +39,6 @@ class LoadContactsBednetsTests(unittest.TestCase):
 
     def test_should_titalize_name(self):
         self.assertEqual('Akshay Naval',_parse_name('akshay naval  '))
-
-    def test_should_parse_gender(self):
-        self.assertEqual('M',_parse_gender('male'))
-        self.assertEqual('F',_parse_gender('female'))
-        self.assertEqual(None,_parse_gender(None))
-        self.assertEqual(None,_parse_gender(''))
-
-    def test_should_not_set_village_on_contact_if_village_is_empty(self):
-        contact = Mock()
-        contact.village = 'not_set'
-        _set_village('  ',contact)
-        self.assertAlmostEqual('not_set', contact.village)
 
     def test_should_create_a_user_with_username_and_group(self):
         values = dict(name='Unique User  ')

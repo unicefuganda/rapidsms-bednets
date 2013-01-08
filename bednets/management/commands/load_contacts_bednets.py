@@ -11,12 +11,13 @@ import re
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
+        """
+                Command to import HealthProviders by spreadsheet
+                Expected to have headers --> ['telephone number', 'name','gender']
+        """
         if len(args) < 1:
             print "Please specify file with reporters"
             return
-#        fields = ['telephone number', 'name', 'district',
-#                  'county', 'village', 'age',
-#                  'gender', 'language']
         print handle_excel_file(open(args[0]))
 
 
@@ -33,21 +34,6 @@ def _parse_name(name):
     if is_empty(name):
         return "Anonymous User"
     return name.strip().title()
-
-
-def _parse_gender(gender):
-    if is_empty(gender):
-        return None
-    return gender.upper()[:1]
-
-
-def _set_village(village, contact):
-    if is_empty(village):
-        return
-    _village = find_closest_match(village, Location.objects)
-    if _village:
-        contact.village = _village
-        contact.village_name = _village.name or None
 
 
 def _set_reporting_location(district, contact):
@@ -83,8 +69,11 @@ def _create_user_for_contact(values):
 
 
 def _assign_user_to_contact(contact, group, values):
-    user = _create_user_for_contact(values)
-    user.save()
+    if contact.user is None:
+        user = _create_user_for_contact(values)
+        user.save()
+    else:
+        user = contact.user
     user.groups.add(group)
     user.save()
     contact.user = user
@@ -97,7 +86,7 @@ def handle_excel_file(file):
     duplicates = []
     info = ''
     try:
-        group = Group.objects.get(name="bednets")
+        group = Group.objects.get(name="LLIN")
         parsed_values = XlsParser().parse(file.read())
         for values in parsed_values:
             raw_number = values.get('telephone number')
@@ -111,13 +100,10 @@ def handle_excel_file(file):
             phone_number, backend = assign_backend(raw_number)
             if phone_number not in contacts and backend is not None:
                 connection, created = Connection.objects.get_or_create(identity=phone_number, backend=backend)
-                if not created:
+                if not created and connection.contact is not None:
                     duplicates.append(phone_number)
-                    continue
                 contact = connection.contact or Contact()
                 contact.name = _parse_name(values.get('name'))
-                contact.gender = _parse_gender(values.get('gender'))
-                _set_village(values.get('village'), contact)
                 _set_reporting_location(values.get('district'), contact)
                 contact.save()
                 contact.groups.add(group)
@@ -136,7 +122,7 @@ def handle_excel_file(file):
 
     if len(duplicates) > 0:
         info = info\
-               + 'The following numbers already exist in the system and thus have not been uploaded: '\
+               + 'The following numbers already exist in the system and have been updated: '\
         + ' ,'.join(duplicates)
     if len(invalid) > 0:
         info = info\
