@@ -6,7 +6,18 @@ from django.http import HttpResponse
 
 def generate_excel_response(data, headings):
     book = xlwt.Workbook(encoding="utf8")
-    write_xls(sheet_name="Bednets Reports", headings=headings, data=data, book=book)
+    write_xls(sheet_name="BedNets Report", headings=headings, data=data, book=book)
+    response = HttpResponse(mimetype="application/vnd.ms-excel")
+    fname_prefix = datetime.date.today().strftime('%Y%m%d') + "-" + strftime('%H%M%S')
+    response["Content-Disposition"] = 'attachment; filename=%s_bednet_report.xls' % fname_prefix
+    book.save(response)
+    return response
+
+def generate_multiple_excel_sheets_response(sent_data,received_data,dist_data, headings):
+    book = xlwt.Workbook(encoding="utf8")
+    write_xls(sheet_name="Sent Report", headings=headings, data=sent_data, book=book)
+    write_xls(sheet_name="Received Report", headings=headings, data=received_data, book=book)
+    write_xls(sheet_name="Distributed Report", headings=headings, data=dist_data, book=book)
     response = HttpResponse(mimetype="application/vnd.ms-excel")
     fname_prefix = datetime.date.today().strftime('%Y%m%d') + "-" + strftime('%H%M%S')
     response["Content-Disposition"] = 'attachment; filename=%s_bednet_report.xls' % fname_prefix
@@ -39,3 +50,4 @@ def get_outer_join_sent_recv_dist(distributed_xform, received_xform, sent_xform)
             data.append(data_builder)
     data = filter(None, data)
     return data
+
