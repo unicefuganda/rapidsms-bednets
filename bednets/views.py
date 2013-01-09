@@ -18,8 +18,8 @@ def generate_dump_bednets_report(request):
     distributed_xform = XForm.objects.get(keyword="dist")
     
     sent_data,received_data,dist_data = get_data_dump_for_bednets(sent_xform,received_xform,distributed_xform)
-    sent_headings = ["Name", "Telephone Number","District","Invalid Submission","Number of BedNets Sent","From Location","To Location"]
-    received_headings = ["Name", "Telephone Number","District","Invalid Submission","Number of BedNets Sent","At Location"]
+    sent_headings = ["Name", "Telephone Number","District","Invalid Submission","Invalid Reporter","Number of BedNets Sent","From Location","To Location"]
+    received_headings = ["Name", "Telephone Number","District","Invalid Submission","Invalid Reporter","Number of BedNets Sent","At Location"]
 
     return generate_multiple_excel_sheets_response(sent_data,received_data,dist_data,sent_headings,received_headings)
     
