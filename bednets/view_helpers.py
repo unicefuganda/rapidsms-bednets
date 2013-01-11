@@ -37,22 +37,22 @@ def get_outer_join_sent_recv_dist(distributed_xform, received_xform, sent_xform)
     for sent_submission in sent_xform.submissions.all():
         if not sent_submission.has_errors:
             data_builder = []
-            data_builder.append(sent_submission.values.all()[1].value)
+            data_builder.append(sent_submission.eav_values.all()[1].value)
             received_quantity = 0
             dist_quantity = 0
             received_at_subcounty = 0
             for received_submission in received_submissions:
-                if not received_submission.has_errors and received_submission.values.all()[1].value == sent_submission.values.all()[2].value:
-                    received_quantity += received_submission.values.all()[0].value
-                if not received_submission.has_errors and received_submission.values.all()[1].value == sent_submission.values.all()[1].value:
-                    received_at_subcounty = received_submission.values.all()[0].value
+                if not received_submission.has_errors and received_submission.eav_values.all()[1].value == sent_submission.eav_values.all()[2].value:
+                    received_quantity += received_submission.eav_values.all()[0].value
+                if not received_submission.has_errors and received_submission.eav_values.all()[1].value == sent_submission.eav_values.all()[1].value:
+                    received_at_subcounty = received_submission.eav_values.all()[0].value
             for dist_submission in distributed_submissions:
-                if not dist_submission.has_errors and dist_submission.values.all()[1].value == sent_submission.values.all()[2].value:
-                    dist_quantity += dist_submission.values.all()[0].value
+                if not dist_submission.has_errors and dist_submission.eav_values.all()[1].value == sent_submission.eav_values.all()[2].value:
+                    dist_quantity += dist_submission.eav_values.all()[0].value
 
             data_builder.append(received_at_subcounty)
-            data_builder.append(sent_submission.values.all()[0].value)
-            data_builder.append(sent_submission.values.all()[2].value)
+            data_builder.append(sent_submission.eav_values.all()[0].value)
+            data_builder.append(sent_submission.eav_values.all()[2].value)
 
             data_builder.append(received_quantity)
             data_builder.append(dist_quantity)
@@ -66,11 +66,11 @@ def get_outer_join_sent_recv_dist(distributed_xform, received_xform, sent_xform)
         if not received_submission.has_errors:
             has_corresponding_sent = False
             for sent_submission in sent_xform.submissions.all():
-                if received_submission.values.all()[1] == sent_submission.values.all()[1]:
+                if received_submission.eav_values.all()[1].value == sent_submission.eav_values.all()[2].value:
                     has_corresponding_sent = True
                     break
             if not has_corresponding_sent:
-                data.append([received_submission.values.all()[1].value,received_submission.values.all()[0].value])
+                data.append([received_submission.eav_values.all()[1].value,received_submission.eav_values.all()[0].value])
 
     data = filter(None, data)
     data = replace_zero_with_empty_string(data)
@@ -95,9 +95,9 @@ def get_data_dump_for_bednets(sent_xform, received_xform, distributed_xform):
         data_builder.append(submission.connection.contact.reporting_location.name if submission.connection.contact and submission.connection.contact.reporting_location else "")
         data_builder.append(submission.has_errors)
         data_builder.append(contact_exists_and_belongs_to_group(submission,group_name="LLIN"))
-        data_builder.append(submission.values.all()[0].value)
-        data_builder.append(submission.values.all()[1].value if len(submission.values.all())>=2 else "")
-        data_builder.append(submission.values.all()[2].value if len(submission.values.all())>=3 else "")
+        data_builder.append(submission.eav_values.all()[0].value)
+        data_builder.append(submission.eav_values.all()[1].value if len(submission.eav_values.all())>=2 else "")
+        data_builder.append(submission.eav_values.all()[2].value if len(submission.eav_values.all())>=3 else "")
         sent_data.append(data_builder)
     for submission in received_xform.submissions.all():
         data_builder = []
@@ -106,8 +106,8 @@ def get_data_dump_for_bednets(sent_xform, received_xform, distributed_xform):
         data_builder.append(submission.connection.contact.reporting_location.name if submission.connection.contact and submission.connection.contact.reporting_location else "")
         data_builder.append(submission.has_errors)
         data_builder.append(contact_exists_and_belongs_to_group(submission,"LLIN"))
-        data_builder.append(submission.values.all()[0].value)
-        data_builder.append(submission.values.all()[1].value if len(submission.values.all())>=2 else "")
+        data_builder.append(submission.eav_values.all()[0].value)
+        data_builder.append(submission.eav_values.all()[1].value if len(submission.eav_values.all())>=2 else "")
         received_data.append(data_builder)
     for submission in distributed_xform.submissions.all():
         data_builder = []
@@ -116,7 +116,7 @@ def get_data_dump_for_bednets(sent_xform, received_xform, distributed_xform):
         data_builder.append(submission.connection.contact.reporting_location.name if submission.connection.contact and submission.connection.contact.reporting_location else "")
         data_builder.append(submission.has_errors)
         data_builder.append(contact_exists_and_belongs_to_group(submission,"LLIN"))
-        data_builder.append(submission.values.all()[0].value)
-        data_builder.append(submission.values.all()[1].value if len(submission.values.all())>=2 else "")
+        data_builder.append(submission.eav_values.all()[0].value)
+        data_builder.append(submission.eav_values.all()[1].value if len(submission.eav_values.all())>=2 else "")
         dist_data.append(data_builder)
     return sent_data,received_data,dist_data
