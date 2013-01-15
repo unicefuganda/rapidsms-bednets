@@ -28,10 +28,11 @@ def generate_multiple_excel_sheets_response(sent_data,received_data,dist_data,se
 def replace_zero_with_empty_string(data):
     for index,value_list in enumerate(data):
         data_builder = []
-        has_recv_at_sc = True if value_list[1]>0 else False
         for key,item in enumerate(value_list):
-            if key==1 or key==0:
-                data_builder.append(" " if item==0 else item)
+            if key==0:
+                data_builder.append(item)
+            elif key==1 or key==6:
+                data_builder.append(" " if item==0  else item)
             elif key==2 or key==3:
                 data_builder.append("" if item==0  else item)
             elif key==4 :
@@ -39,7 +40,8 @@ def replace_zero_with_empty_string(data):
             elif key==5 :
                 data_builder.append("" if item==0 or value_list[2]=="" or value_list[4]=="" else item)
 
-        data_builder = [" " if data_index > 1 and has_recv_at_sc and item=="" else item for data_index,item in enumerate(data_builder) ]
+        has_recv_at_sc = True if value_list[1]>0 else False
+        data_builder = [" " if data_index>1 and has_recv_at_sc and item=="" else item for data_index,item in enumerate(data_builder) ]
 
         data[index] = data_builder
     return data
