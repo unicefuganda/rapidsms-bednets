@@ -1,11 +1,10 @@
-from mtrack_project.rapidsms_bednets.bednets.view_helpers import generate_excel_response,generate_multiple_excel_sheets_response, get_outer_join_sent_recv_dist,get_data_dump_for_bednets, get_consolidated_data
+from mtrack_project.rapidsms_bednets.bednets.view_helpers import generate_excel_response,generate_multiple_excel_sheets_response,get_data_dump_for_bednets, get_consolidated_data
 from mtrack_project.rapidsms_xforms_src.rapidsms_xforms.models import XForm
 
 
 def generate_bednets_report(request):
     data = get_consolidated_data()
     headings = ["Sub-County","Quantity Received at Sub-County" ,"Quantity sent to Distribution Point", "Distribution Point", "Quantity Received at Distribution Point", "Quantity Distributed at Distribution Point" ,"Quantity Received at DP - Quantity Distributed at DP"]
-
     return generate_excel_response(data, headings)
 
 def generate_dump_bednets_report(request):

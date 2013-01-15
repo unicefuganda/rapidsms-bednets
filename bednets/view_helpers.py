@@ -27,53 +27,21 @@ def generate_multiple_excel_sheets_response(sent_data,received_data,dist_data,se
 
 def replace_zero_with_empty_string(data):
     for index,value_list in enumerate(data):
-        data[index] = ["" if item==0 else item for item in value_list]
-    return data
+        data_builder = []
+        has_recv_at_sc = True if value_list[1]>0 else False
+        for key,item in enumerate(value_list):
+            if key==1 or key==0:
+                data_builder.append(" " if item==0 else item)
+            elif key==2 or key==3:
+                data_builder.append("" if item==0  else item)
+            elif key==4 :
+                data_builder.append("" if item==0 or value_list[2]=="" else item)
+            elif key==5 :
+                data_builder.append("" if item==0 or value_list[2]=="" or value_list[4]=="" else item)
 
-def get_outer_join_sent_recv_dist(distributed_xform, received_xform, sent_xform):
-    data = []
-    received_submissions = received_xform.submissions.all()
-    distributed_submissions = distributed_xform.submissions.all()
-    for sent_submission in sent_xform.submissions.all():
-        if not sent_submission.has_errors:
-            data_builder = []
-            data_builder.append(sent_submission.eav_values.all()[1].value)
-            received_quantity = 0
-            dist_quantity = 0
-            received_at_subcounty = 0
-            for received_submission in received_submissions:
-                if not received_submission.has_errors and received_submission.eav_values.all()[1].value == sent_submission.eav_values.all()[2].value:
-                    received_quantity += received_submission.eav_values.all()[0].value
-                if not received_submission.has_errors and received_submission.eav_values.all()[1].value == sent_submission.eav_values.all()[1].value:
-                    received_at_subcounty = received_submission.eav_values.all()[0].value
-            for dist_submission in distributed_submissions:
-                if not dist_submission.has_errors and dist_submission.eav_values.all()[1].value == sent_submission.eav_values.all()[2].value:
-                    dist_quantity += dist_submission.eav_values.all()[0].value
+        data_builder = [" " if data_index > 1 and has_recv_at_sc and item=="" else item for data_index,item in enumerate(data_builder) ]
 
-            data_builder.append(received_at_subcounty)
-            data_builder.append(sent_submission.eav_values.all()[0].value)
-            data_builder.append(sent_submission.eav_values.all()[2].value)
-
-            data_builder.append(received_quantity)
-            data_builder.append(dist_quantity)
-            in_stock = received_quantity - dist_quantity
-
-            data_builder.append(in_stock if in_stock!=0 else " ") #an empty string would mean the CELL is colored RED.Not what we want here.
-
-            data.append(data_builder)
-
-    for received_submission in received_submissions:
-        if not received_submission.has_errors:
-            has_corresponding_sent = False
-            for sent_submission in sent_xform.submissions.all():
-                if received_submission.eav_values.all()[1].value == sent_submission.eav_values.all()[2].value:
-                    has_corresponding_sent = True
-                    break
-            if not has_corresponding_sent:
-                data.append([received_submission.eav_values.all()[1].value,received_submission.eav_values.all()[0].value])
-
-    data = filter(None, data)
-    data = replace_zero_with_empty_string(data)
+        data[index] = data_builder
     return data
 
 
