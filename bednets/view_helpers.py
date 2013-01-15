@@ -120,3 +120,13 @@ def get_data_dump_for_bednets(sent_xform, received_xform, distributed_xform):
         data_builder.append(submission.eav_values.all()[1].value if len(submission.eav_values.all())>=2 else "")
         dist_data.append(data_builder)
     return sent_data,received_data,dist_data
+
+def get_consolidated_data():
+    from django.db import connection, transaction
+    cursor = connection.cursor()
+    cursor.execute("select sub_county,quantity_at_subcounty,quantity_sent_to_dp,distribution_point,quantity_received_at_dp,quantity_distributed_at_dp,in_stock  from bednets_bednetsreport")
+    data =  cursor.fetchall()
+    data = filter(None, data)
+    data = replace_zero_with_empty_string(data)
+    return data
+

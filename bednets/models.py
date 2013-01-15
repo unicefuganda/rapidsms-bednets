@@ -17,11 +17,12 @@ class ConnectionProfile(object):
 
 class BednetsReport(models.Model):
     sub_county = models.TextField()
-    distribution_point = models.TextField()
     quantity_at_subcounty = models.IntegerField(null = True,default=0)
     quantity_sent_to_dp = models.IntegerField(null=True,default=0)
+    distribution_point = models.TextField()
     quantity_received_at_dp = models.IntegerField(null=True,default=0)
     quantity_distributed_at_dp = models.IntegerField(null=True,default=0)
+    in_stock = models.IntegerField(null=True,default=0)
 
 
 bednets = ['send', 'recv', 'dist']
@@ -46,8 +47,8 @@ def update_reports(xform,submission):
             existing_records = BednetsReport.objects.filter(sub_county=sub_county)
             for record in existing_records:
                 if record.distribution_point == distribution_point:
-                    record.quantity_sent_to_dp += quantity_sent_to_dp
-                    record.save()
+                    query_dist = "update bednets_bednetsreport set quantity_sent_to_dp=quantity_sent_to_dp+"+str(quantity_sent_to_dp) + "where id=" + str(record.id)
+                    run_sql(query_dist)
                     return
             BednetsReport.objects.create(sub_county=sub_county,distribution_point=distribution_point,quantity_sent_to_dp=quantity_sent_to_dp)
         except Exception as e:
@@ -62,16 +63,18 @@ def update_reports(xform,submission):
             #if it was received at a DP
             dp_exists = BednetsReport.objects.filter(distribution_point=received_at) #should only be 1 entry for each DP
             if len(dp_exists) == 1:
-                dp_exists[0].quantity_received_at_dp += quantity_received
-                dp_exists[0].save()
+                query_recv = "update bednets_bednetsreport set quantity_received_at_dp=quantity_received_at_dp+"+str(quantity_received) + "where id=" + str(dp_exists[0].id)
+                run_sql(query_recv)
+                query_in_stock = "update bednets_bednetsreport set in_stock = quantity_received_at_dp - quantity_distributed_at_dp where id=" + str(dp_exists[0].id)
+                run_sql(query_in_stock)
                 return
 
             elif len(dp_exists) == 0:
                 subcounty_exists = BednetsReport.objects.filter(sub_county=received_at)
                 for subcounty in subcounty_exists:
                     if subcounty.distribution_point == '':
-                        subcounty.quantity_at_subcounty += quantity_received
-                        subcounty.save()
+                        query_dist = "update bednets_bednetsreport set quantity_at_subcounty=quantity_at_subcounty+"+str(quantity_received) + "where id=" + str(subcounty.id)
+                        run_sql(query_dist)
                         return
 
             BednetsReport.objects.create(sub_county=received_at,quantity_at_subcounty=quantity_received)
@@ -87,8 +90,10 @@ def update_reports(xform,submission):
 
             dp_exists = BednetsReport.objects.filter(distribution_point=distributed_at) #should only be 1 entry for each DP
             if len(dp_exists) == 1:
-                dp_exists[0].quantity_distributed_at_dp += quantity_distributed
-                dp_exists[0].save()
+                query_dist = "update bednets_bednetsreport set quantity_distributed_at_dp=quantity_distributed_at_dp+"+str(quantity_distributed) + "where id=" + str(dp_exists[0].id)
+                run_sql(query_dist)
+                query_in_stock = "update bednets_bednetsreport set in_stock = quantity_received_at_dp - quantity_distributed_at_dp where id=" + str(dp_exists[0].id)
+                run_sql(query_in_stock)
                 return
 
             elif len(dp_exists) == 0:
@@ -98,3 +103,11 @@ def update_reports(xform,submission):
         except Exception as e:
             print str(e)
         return
+
+def run_sql(sql):
+    from django.db import connection, transaction
+    cursor = connection.cursor()
+
+    cursor.execute(sql)
+    transaction.commit_unless_managed()
+    return
