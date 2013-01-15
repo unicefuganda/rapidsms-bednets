@@ -339,5 +339,38 @@
             "type":"req_val",
             "order":1000
         }
+    },
+    {
+        "pk":119,
+        "model":"rapidsms_xforms.xformfieldconstraint",
+        "fields":{
+            "test":0,
+            "field":422,
+            "message":"Number of bednets sent must be a positive value.",
+            "type":"min_val",
+            "order":1000
+        }
+    },
+    {
+        "pk":120,
+        "model":"rapidsms_xforms.xformfieldconstraint",
+        "fields":{
+            "test":0,
+            "field":425,
+            "message":"Number of bednets received must be a positive value.",
+            "type":"min_val",
+            "order":1000
+        }
+    },
+    {
+        "pk":121,
+        "model":"rapidsms_xforms.xformfieldconstraint",
+        "fields":{
+            "test":0,
+            "field":427,
+            "message":"Number of bednets distributed must be a positive value",
+            "type":"min_val",
+            "order":1000
+        }
     }
 ]
