@@ -1,7 +1,8 @@
 import unittest
 from mtrack_project.rapidsms_cvs.cvs.tests.util import fake_incoming
 from mtrack_project.rapidsms_bednets.bednets.models  import BednetsReport,update_reports
-from mtrack_project.rapidsms_xforms_src.rapidsms_xforms.models import XForm,xform_received
+from rapidsms_xforms_src.rapidsms_xforms.models import XForm
+
 class BednetsReportTest(unittest.TestCase):
 
     def test_should_add_single_row_with_only_sc_entry(self):
@@ -9,7 +10,9 @@ class BednetsReportTest(unittest.TestCase):
         submission.has_errors = False
         submission.save()
 
-        xform_received.connect(update_reports)
+        xform = XForm.objects.get(keyword="recv")
+
+        update_reports(xform,submission)
         row = BednetsReport.objects.filter(sub_county="sc1")
 
         self.assertEquals(len(row),1)
