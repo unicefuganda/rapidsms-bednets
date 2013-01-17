@@ -1,3 +1,4 @@
+from django.db import connection, transaction
 def send_submission_handler(submission):
     sub_county = submission.eav_values.all()[1].value
     distribution_point = submission.eav_values.all()[2].value
@@ -45,7 +46,6 @@ def dist_submission_handler(submission):
 
 
 def run_sql(sql):
-    from django.db import connection, transaction
     cursor = connection.cursor()
     cursor.execute(sql)
     transaction.commit_unless_managed()

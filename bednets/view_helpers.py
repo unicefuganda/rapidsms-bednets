@@ -4,6 +4,7 @@ from time import strftime
 from mtrack_project.rapidsms_mtrack.mtrack.utils import write_xls
 from django.http import HttpResponse
 from django.contrib.auth.models import Group
+from django.db import connection
 
 def generate_excel_response(data, headings):
     book = xlwt.Workbook(encoding="utf8")
@@ -16,9 +17,9 @@ def generate_excel_response(data, headings):
 
 def generate_multiple_excel_sheets_response(sent_data,received_data,dist_data,sent_headings,recv_headings):
     book = xlwt.Workbook(encoding="utf8")
-    write_xls(sheet_name="Sent Report", headings=sent_headings, data=sent_data, book=book,cell_red_if_value=False)
-    write_xls(sheet_name="Received Report", headings=recv_headings, data=received_data, book=book,cell_red_if_value=False)
-    write_xls(sheet_name="Distributed Report", headings=recv_headings, data=dist_data, book=book,cell_red_if_value=False)
+    write_xls(sheet_name="Sent Report", headings=sent_headings, data=sent_data, book=book,cell_red_if_value=True)
+    write_xls(sheet_name="Received Report", headings=recv_headings, data=received_data, book=book,cell_red_if_value=True)
+    write_xls(sheet_name="Distributed Report", headings=recv_headings, data=dist_data, book=book,cell_red_if_value=True)
     response = HttpResponse(mimetype="application/vnd.ms-excel")
     fname_prefix = datetime.date.today().strftime('%Y%m%d') + "-" + strftime('%H%M%S')
     response["Content-Disposition"] = 'attachment; filename=%s_bednet_report.xls' % fname_prefix
@@ -47,56 +48,20 @@ def replace_zero_with_empty_string(data):
     return data
 
 
-def contact_exists_and_belongs_to_group(submission,group_name):
-    if not submission.connection.contact:
-        return False
-    group = Group.objects.get(name=group_name)
-    return group in submission.connection.contact.groups.all()
+def execute_sql(sql):
+    cursor = connection.cursor()
+    cursor.execute(sql)
+    data = cursor.fetchall()
+    data = filter(None, data)
+    return data
 
-
-def get_data_dump_for_bednets(sent_xform, received_xform, distributed_xform):
-    sent_data = []
-    received_data = []
-    dist_data = []
-    for submission in sent_xform.submissions.all():
-        data_builder = []
-        data_builder.append(submission.connection.contact.name if submission.connection.contact else "")
-        data_builder.append(submission.connection.identity)
-        data_builder.append(submission.connection.contact.reporting_location.name if submission.connection.contact and submission.connection.contact.reporting_location else "")
-        data_builder.append(submission.has_errors)
-        data_builder.append(contact_exists_and_belongs_to_group(submission,group_name="LLIN"))
-        data_builder.append(submission.eav_values.all()[0].value)
-        data_builder.append(submission.eav_values.all()[1].value if len(submission.eav_values.all())>=2 else "")
-        data_builder.append(submission.eav_values.all()[2].value if len(submission.eav_values.all())>=3 else "")
-        sent_data.append(data_builder)
-    for submission in received_xform.submissions.all():
-        data_builder = []
-        data_builder.append(submission.connection.contact.name if submission.connection.contact else "")
-        data_builder.append(submission.connection.identity)
-        data_builder.append(submission.connection.contact.reporting_location.name if submission.connection.contact and submission.connection.contact.reporting_location else "")
-        data_builder.append(submission.has_errors)
-        data_builder.append(contact_exists_and_belongs_to_group(submission,"LLIN"))
-        data_builder.append(submission.eav_values.all()[0].value)
-        data_builder.append(submission.eav_values.all()[1].value if len(submission.eav_values.all())>=2 else "")
-        received_data.append(data_builder)
-    for submission in distributed_xform.submissions.all():
-        data_builder = []
-        data_builder.append(submission.connection.contact.name if submission.connection.contact else "")
-        data_builder.append(submission.connection.identity)
-        data_builder.append(submission.connection.contact.reporting_location.name if submission.connection.contact and submission.connection.contact.reporting_location else "")
-        data_builder.append(submission.has_errors)
-        data_builder.append(contact_exists_and_belongs_to_group(submission,"LLIN"))
-        data_builder.append(submission.eav_values.all()[0].value)
-        data_builder.append(submission.eav_values.all()[1].value if len(submission.eav_values.all())>=2 else "")
-        dist_data.append(data_builder)
-    return sent_data,received_data,dist_data
 
 def get_consolidated_data():
-    from django.db import connection
-    cursor = connection.cursor()
-    cursor.execute("select sub_county,quantity_at_subcounty,quantity_sent_to_dp,distribution_point,quantity_received_at_dp,quantity_distributed_at_dp,in_stock  from bednets_bednetsreport")
-    data =  cursor.fetchall()
-    data = filter(None, data)
+    data = execute_sql("select sub_county,quantity_at_subcounty,quantity_sent_to_dp,distribution_point,quantity_received_at_dp,quantity_distributed_at_dp,in_stock  from bednets_bednetsreport")
     data = replace_zero_with_empty_string(data)
     return data
+
+def get_data_dump(keyword):
+    return execute_sql("select name,telephone,district,invalid_submission,invalid_reporter,number_of_bednets,at_location,from_location  "
+                       "from bednets_dumpreport where keyword='" + keyword + "'")
 
