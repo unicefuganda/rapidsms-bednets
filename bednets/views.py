@@ -1,5 +1,5 @@
-from mtrack_project.rapidsms_bednets.bednets.view_helpers import generate_excel_response,generate_multiple_excel_sheets_response,get_data_dump, get_consolidated_data
-from mtrack_project.rapidsms_xforms_src.rapidsms_xforms.models import XForm
+from mtrack_project.rapidsms_bednets.bednets.view_helpers import generate_excel_response,generate_multiple_excel_sheets_response,\
+     get_data_dump, get_consolidated_data
 
 
 def generate_bednets_report(request):
@@ -8,10 +8,6 @@ def generate_bednets_report(request):
     return generate_excel_response(data, headings)
 
 def generate_dump_bednets_report(request):
-    sent_xform = XForm.objects.get(keyword="send")
-    received_xform = XForm.objects.get(keyword="recv")
-    distributed_xform = XForm.objects.get(keyword="dist")
-    
     sent_data = get_data_dump(keyword="send")
     received_data = get_data_dump(keyword="recv")
     dist_data = get_data_dump(keyword="dist")

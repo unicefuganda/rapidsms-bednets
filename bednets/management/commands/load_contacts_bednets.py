@@ -8,6 +8,7 @@ from script.utils.handling import find_closest_match
 from rapidsms.contrib.locations.models import Location
 from bednets.spreadsheets_utils import XlsParser, is_empty, XlsParsingException
 import re
+from rapidsms_bednets.bednets import settings
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
@@ -86,7 +87,7 @@ def handle_excel_file(file):
     duplicates = []
     info = ''
     try:
-        group = Group.objects.get(name="LLIN")
+        group = Group.objects.get(name=settings.BEDNETS_GROUP_NAME)
         parsed_values = XlsParser().parse(file.read())
         for values in parsed_values:
             raw_number = values.get('telephone number')

@@ -4,7 +4,8 @@ from django.contrib.auth.models import Group
 from django.db import models,transaction
 from django.dispatch import receiver
 from rapidsms_xforms.models import xform_received
-from rapidsms_bednets.bednets.xformsubmissionhandlers import received_submission_handler,send_submission_handler,dist_submission_handler
+from rapidsms_bednets.bednets import settings
+from rapidsms_bednets.bednets.xform_submission_handlers import received_submission_handler,send_submission_handler,dist_submission_handler
 
 class ConnectionProfile(object):
 
@@ -68,7 +69,7 @@ def update_dump_reports(xform,submission):
         telephone = submission.connection.identity
         district = submission.connection.contact.reporting_location.name if submission.connection.contact and submission.connection.contact.reporting_location else ""
         invalid_submission = submission.has_errors
-        invalid_reporter = contact_exists_and_belongs_to_group(submission,group_name="LLIN")
+        invalid_reporter = contact_exists_and_belongs_to_group(submission,group_name=settings.BEDNETS_GROUP_NAME)
         number_of_bednets = submission.eav_values.all()[0].value
         at_location = submission.eav_values.all()[1].value if keyword=="recv" or keyword=="dist" else submission.eav_values.all()[2].value
         from_location = submission.eav_values.all()[1].value if keyword=="send" else ""

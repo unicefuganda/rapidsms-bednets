@@ -3,7 +3,6 @@ import xlwt
 from time import strftime
 from mtrack_project.rapidsms_mtrack.mtrack.utils import write_xls
 from django.http import HttpResponse
-from django.contrib.auth.models import Group
 from django.db import connection
 
 def generate_excel_response(data, headings):
