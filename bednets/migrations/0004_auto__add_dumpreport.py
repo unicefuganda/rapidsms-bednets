@@ -20,7 +20,9 @@ class Migration(SchemaMigration):
             ('number_of_bednets', self.gf('django.db.models.fields.IntegerField')(default=0)),
             ('at_location', self.gf('django.db.models.fields.TextField')()),
             ('from_location', self.gf('django.db.models.fields.TextField')(null=True)),
-        ))
+            ('submission_id', self.gf('django.db.models.fields.IntegerField')()),
+            ('created', self.gf('django.db.models.fields.DateTimeField')()),
+            ))
         db.send_create_signal('bednets', ['DumpReport'])
 
 
@@ -44,6 +46,7 @@ class Migration(SchemaMigration):
         'bednets.dumpreport': {
             'Meta': {'object_name': 'DumpReport'},
             'at_location': ('django.db.models.fields.TextField', [], {}),
+            'created': ('django.db.models.fields.DateTimeField', [], {}),
             'district': ('django.db.models.fields.TextField', [], {'null': 'True'}),
             'from_location': ('django.db.models.fields.TextField', [], {'null': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
@@ -52,8 +55,9 @@ class Migration(SchemaMigration):
             'keyword': ('django.db.models.fields.TextField', [], {}),
             'name': ('django.db.models.fields.TextField', [], {'null': 'True'}),
             'number_of_bednets': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-            'telephone': ('django.db.models.fields.TextField', [], {})
-        }
+            'telephone': ('django.db.models.fields.TextField', [], {}),
+            'submission_id': ('django.db.models.fields.IntegerField', [], {})
+            }
     }
 
     complete_apps = ['bednets']

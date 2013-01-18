@@ -1,9 +1,9 @@
 from django.db import connection, transaction
 
-def send_submission_handler(submission):
+def send_submission_handler(submission, duplicate_bednets):
     sub_county = submission.eav_values.all()[1].value
     distribution_point = submission.eav_values.all()[2].value
-    quantity_sent_to_dp = submission.eav_values.all()[0].value
+    quantity_sent_to_dp = submission.eav_values.all()[0].value - duplicate_bednets
     query_dist = "update bednets_bednetsreport set quantity_sent_to_dp=quantity_sent_to_dp+" + str(quantity_sent_to_dp) \
                  + "where distribution_point='" + distribution_point + "'"
     cursor_recv_dist = run_sql(query_dist)
@@ -12,9 +12,9 @@ def send_submission_handler(submission):
     from rapidsms_bednets.bednets.models import BednetsReport
     BednetsReport.objects.create(sub_county=sub_county, distribution_point=distribution_point,quantity_sent_to_dp=quantity_sent_to_dp)
 
-def received_submission_handler(submission):
+def received_submission_handler(submission, duplicate_bednets):
     received_at = submission.eav_values.all()[1].value #sc or dp
-    quantity_received = submission.eav_values.all()[0].value
+    quantity_received = submission.eav_values.all()[0].value - duplicate_bednets
     query_recv = "update bednets_bednetsreport set quantity_received_at_dp=quantity_received_at_dp+" + \
                  str(quantity_received) + " where distribution_point='" + received_at + "'"
     run_sql(query_recv)
@@ -31,9 +31,9 @@ def received_submission_handler(submission):
     from rapidsms_bednets.bednets.models import BednetsReport
     BednetsReport.objects.create(sub_county=received_at, quantity_at_subcounty=quantity_received)
 
-def dist_submission_handler(submission):
+def dist_submission_handler(submission, duplicate_bednets):
     distributed_at = submission.eav_values.all()[1].value
-    quantity_distributed = submission.eav_values.all()[0].value
+    quantity_distributed = submission.eav_values.all()[0].value - duplicate_bednets
     query_dist = "update bednets_bednetsreport set quantity_distributed_at_dp=quantity_distributed_at_dp+" + \
                  str(quantity_distributed)+ " where distribution_point='" + distributed_at + "'"
     run_sql(query_dist)

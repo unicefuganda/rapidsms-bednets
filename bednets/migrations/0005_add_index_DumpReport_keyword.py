@@ -8,13 +8,15 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding index on 'DumpReport', fields ['keyword']
+        # Adding index on 'DumpReport', fields ['keyword']['submission_id']
         db.create_index('bednets_dumpreport', ['keyword'])
+        db.create_index('bednets_dumpreport', ['submission_id'])
 
 
     def backwards(self, orm):
-        # Removing index on 'DumpReport', fields ['keyword']
+        # Removing index on 'DumpReport', fields ['keyword']['submission_id']
         db.delete_index('bednets_dumpreport', ['keyword'])
+        db.delete_index('bednets_dumpreport', ['submission_id'])
 
 
     models = {
@@ -32,6 +34,7 @@ class Migration(SchemaMigration):
         'bednets.dumpreport': {
             'Meta': {'object_name': 'DumpReport'},
             'at_location': ('django.db.models.fields.TextField', [], {}),
+            'created': ('django.db.models.fields.DateTimeField', [], {}),
             'district': ('django.db.models.fields.TextField', [], {'null': 'True'}),
             'from_location': ('django.db.models.fields.TextField', [], {'null': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
@@ -40,8 +43,9 @@ class Migration(SchemaMigration):
             'keyword': ('django.db.models.fields.TextField', [], {}),
             'name': ('django.db.models.fields.TextField', [], {'null': 'True'}),
             'number_of_bednets': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-            'telephone': ('django.db.models.fields.TextField', [], {})
-        }
+            'telephone': ('django.db.models.fields.TextField', [], {}),
+            'submission_id': ('django.db.models.fields.IntegerField', [], {})
+            }
     }
 
     complete_apps = ['bednets']
