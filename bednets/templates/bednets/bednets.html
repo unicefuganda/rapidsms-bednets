@@ -3,6 +3,17 @@
     {{ block.super }}
     <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}generic/stylesheets/generic.css"/>
     <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}generic/stylesheets/map.css"/>
+    <style type="text/css">
+        .bedlinks li {
+            margin: 0;
+            padding-bottom: 10px;
+            background: url(pipe.gif) 0 .3em no-repeat;
+            list-style-type: none;
+            font-weight: bold;
+
+        }
+
+    </style>
 {% endblock %}
 {% block javascripts %}
     {{ block.super }}
@@ -22,9 +33,9 @@ This first dashboard view - with alerts and reports to approve - is currently us
     <div class="module">
         <h2>Bednets</h2>
         <div id="alerts">
-            <ul>
-                <li><a href="{% url bednets_excel_report %}">Consolidated Report</a> </li>
-                <li><a href="{% url bednets_data_dump %}">Data Dump Report</a></li>
+            <ul class="bedlinks">
+                <li><a href="{% url bednets_excel_report %}"><h3>Consolidated Report</h3></a> </li>
+                <li><a href="{% url bednets_data_dump %}"><h3>Data Dump Report</h3></a></li>
             </ul>
         </div
     </div>
