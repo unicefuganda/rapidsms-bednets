@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from mtrack_project.rapidsms_bednets.bednets.view_helpers import generate_excel_response,generate_multiple_excel_sheets_response,\
+from bednets.view_helpers import generate_excel_response,generate_multiple_excel_sheets_response,\
      get_data_dump, get_consolidated_data
 
 

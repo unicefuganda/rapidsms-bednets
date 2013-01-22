@@ -8,7 +8,7 @@ from script.utils.handling import find_closest_match
 from rapidsms.contrib.locations.models import Location
 from bednets.spreadsheets_utils import XlsParser, is_empty, XlsParsingException
 import re
-from rapidsms_bednets.bednets import settings
+from bednets import settings
 
 class Command(BaseCommand):
     def handle(self, *args, **options):

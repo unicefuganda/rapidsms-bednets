@@ -1,7 +1,6 @@
 import unittest
-from mtrack_project.rapidsms_cvs.cvs.tests.util import fake_incoming
-from django.core.exceptions import ValidationError
-from mtrack_project.rapidsms_xforms_src.rapidsms_xforms.models import XFormSubmission
+from cvs.tests.util import fake_incoming
+from rapidsms_xforms.models import XFormSubmission
 
 class SendBednetsXformTest(unittest.TestCase):
     def test_should_invalidate_incomplete_message_without_number_of_bednets(self):

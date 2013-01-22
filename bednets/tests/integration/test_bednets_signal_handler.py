@@ -1,7 +1,6 @@
 import unittest
 from cvs.tests.util import fake_incoming
 from bednets.models  import BednetsReport,DumpReport
-from rapidsms_xforms_src.rapidsms_xforms.models import XForm
 from django.contrib.auth.models import User, Group
 from rapidsms.models import Contact, Connection, Backend
 from bednets import settings

@@ -1,5 +1,5 @@
 import unittest
-from mtrack_project.rapidsms_bednets.bednets.view_helpers import replace_zero_with_empty_string
+from bednets.view_helpers import replace_zero_with_empty_string
 
 class BednetsReportTest(unittest.TestCase):
 

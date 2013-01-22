@@ -1,6 +1,6 @@
 import unittest
-from mtrack_project.rapidsms_cvs.cvs.tests.util import fake_incoming
-from mtrack_project.rapidsms_xforms_src.rapidsms_xforms.models import XFormSubmission
+from cvs.tests.util import fake_incoming
+from rapidsms_xforms.models import XFormSubmission
 
 class SentBednetsXformTest(unittest.TestCase):
 

@@ -8,7 +8,7 @@ def send_submission_handler(submission):
     cursor_recv_dist = run_sql(query_dist)
     if cursor_recv_dist.rowcount > 0:
         return
-    from rapidsms_bednets.bednets.models import BednetsReport
+    from bednets.models import BednetsReport
     BednetsReport.objects.create(sub_county=sub_county, distribution_point=distribution_point,quantity_sent_to_dp=quantity_sent_to_dp)
 
 def received_submission_handler(submission):
@@ -27,7 +27,7 @@ def received_submission_handler(submission):
     cursor_recv_sc = run_sql(query_recv_sc)
     if cursor_recv_sc.rowcount > 0:
         return
-    from rapidsms_bednets.bednets.models import BednetsReport
+    from bednets.models import BednetsReport
     BednetsReport.objects.create(sub_county=received_at, quantity_at_subcounty=quantity_received)
 
 def dist_submission_handler(submission):
@@ -41,7 +41,7 @@ def dist_submission_handler(submission):
     cursor = run_sql(query_recv_dist)
     if cursor.rowcount > 0:
         return
-    from rapidsms_bednets.bednets.models import BednetsReport
+    from bednets.models import BednetsReport
     BednetsReport.objects.create(distribution_point=distributed_at, quantity_distributed_at_dp=quantity_distributed)
 
 
