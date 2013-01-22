@@ -1,7 +1,7 @@
 import datetime
 import xlwt
 from time import strftime
-from mtrack_project.rapidsms_mtrack.mtrack.utils import write_xls
+from mtrack.utils import write_xls
 from django.http import HttpResponse
 from django.db import connection
 
